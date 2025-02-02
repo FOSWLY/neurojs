@@ -2,9 +2,60 @@
   "name": "neurojs",
   "description": "Unoffical library for a short retelling of YouTube videos, articles and texts with Yandex API",
   "version": "0.1.0",
-  "module": "src/index.ts",
+  "license": "MIT",
+  "author": "Toil",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FOSWLY/neurojs",
+    "directory": "packages/shared"
+  },
+  "bugs": {
+    "url": "https://github.com/FOSWLY/neurojs/issues"
+  },
   "type": "module",
-  "exports": {},
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./client": {
+      "require": "./dist/client.js",
+      "import": "./dist/client.js",
+      "types": "./dist/client.d.ts"
+    },
+    "./config": {
+      "require": "./dist/data/config.js",
+      "import": "./dist/data/config.js",
+      "types": "./dist/data/config.d.ts"
+    },
+    "./types": {
+      "require": "./dist/types/index.js",
+      "import": "./dist/types/index.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./types/*": {
+      "require": "./dist/types/*.js",
+      "import": "./dist/types/*.js",
+      "types": "./dist/types/*.d.ts"
+    },
+    "./protos": {
+      "require": "./dist/protos/video_summarize.js",
+      "import": "./dist/protos/video_summarize.js",
+      "types": "./dist/protos/video_summarize.d.ts"
+    },
+    "./protobuf": {
+      "require": "./dist/protobuf.js",
+      "import": "./dist/protobuf.js",
+      "types": "./dist/protobuf.d.ts"
+    },
+    "./typebox/*": {
+      "import": "./dist/typebox/*.ts"
+    }
+  },
   "devDependencies": {
     "@sinclair/typebox-codegen": "^0.10.5",
     "@types/bun": "latest",
@@ -21,6 +72,22 @@
     "typedoc-plugin-rename-defaults": "^0.7.2",
     "typescript-eslint": "^8.22.0"
   },
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "dist"
+  ],
+  "homepage": "https://github.com/FOSWLY/neurojs#readme",
+  "keywords": [
+    "summarize",
+    "video",
+    "yandex",
+    "foswly",
+    "api",
+    "neurojs",
+    "neuro"
+  ],
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
