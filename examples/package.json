@@ -1,0 +1,16 @@
+{
+  "name": "examples",
+  "description": "Usage example of neurojs",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@vot.js/node": "^2.2.0",
+    "@vot.js/shared": "^2.2.0"
+  }
+}
