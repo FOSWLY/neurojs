@@ -1,6 +1,6 @@
 {
   "$schema": "https://typedoc.org/schema.json",
-  "name": "summarize.js",
+  "name": "neurojs",
   "entryPoints": ["../src"],
   "out": "../docs",
   "includeVersion": true,
