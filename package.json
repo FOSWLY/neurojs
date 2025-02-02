@@ -1,5 +1,5 @@
 {
-  "name": "neurojs",
+  "name": "@toil/neurojs",
   "description": "Unoffical library for a short retelling of YouTube videos, articles and texts with Yandex API",
   "version": "0.1.0",
   "license": "MIT",
@@ -71,6 +71,9 @@
     "typedoc-plugin-missing-exports": "^3.1.0",
     "typedoc-plugin-rename-defaults": "^0.7.2",
     "typescript-eslint": "^8.22.0"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "engines": {
     "node": ">=18"
