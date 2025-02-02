@@ -3,9 +3,9 @@ name: Docs
 on:
   push:
     branches:
-      - main
+      - master
   pull_request:
-    branches: [main]
+    branches: [master]
 
 permissions:
   contents: write
