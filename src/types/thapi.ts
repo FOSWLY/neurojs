@@ -1,8 +1,9 @@
 export type GetSharingUrlSuccess = {
   status: "success";
-  sharing_url: string;
+  sharingUrl: string;
 };
 
+// ! SERVER ERRORS. DON'T EDIT !
 export type GetSharingUrlMessage =
   | "not found"
   | "not authorized"
@@ -14,7 +15,6 @@ export type GetSharingUrlFailed = {
 };
 
 export type GetSharingUrlResponse = GetSharingUrlFailed | GetSharingUrlMessage;
-
 export type GetSharingUrlOpts = {
   url: string;
 };

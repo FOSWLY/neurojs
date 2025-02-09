@@ -13,5 +13,5 @@ test.if(!!API_TOKEN)("sharing url", async () => {
   });
 
   // console.log(res);
-  expect(res.sharing_url).toEqual("https://300.ya.ru/3fOcYRBL");
+  expect(res.sharingUrl).toEqual("https://300.ya.ru/3fOcYRBL");
 });
