@@ -60,17 +60,17 @@
     "@sinclair/typebox-codegen": "^0.10.5",
     "@types/bun": "latest",
     "@types/eslint__js": "^8.42.3",
-    "eslint": "^9.19.0",
-    "eslint-plugin-oxlint": "^0.15.8",
+    "eslint": "^9.20.0",
+    "eslint-plugin-oxlint": "^0.15.10",
     "husky": "^9.1.7",
-    "oxlint": "^0.15.8",
+    "oxlint": "^0.15.10",
     "prettier": "^3.4.2",
     "ts-proto": "^2.6.1",
     "tsc-esm-fix": "^3.1.2",
     "typedoc": "^0.27.6",
     "typedoc-plugin-missing-exports": "^3.1.0",
     "typedoc-plugin-rename-defaults": "^0.7.2",
-    "typescript-eslint": "^8.22.0"
+    "typescript-eslint": "^8.23.0"
   },
   "publishConfig": {
     "access": "public"
@@ -92,12 +92,12 @@
     "neuro"
   ],
   "peerDependencies": {
-    "typescript": "^5.0.0"
+    "typescript": "^5.7.3"
   },
   "dependencies": {
     "@bufbuild/protobuf": "^2.2.3",
-    "@vot.js/core": "^2.2.0",
-    "@vot.js/shared": "^2.2.0"
+    "@vot.js/core": "^2.2.4",
+    "@vot.js/shared": "^2.2.4"
   },
   "scripts": {
     "build:bun": "bun run ./scripts/build.ts",
