@@ -2,28 +2,50 @@ import { MinimalClient, VOTJSError } from "@vot.js/core/client";
 import type { ClientResponse, URLSchema } from "@vot.js/core/types/client";
 import { getSecYaHeaders } from "@vot.js/shared/secure";
 
-import type { VideoSummarizeOpts } from "./types/yandex";
+import type {
+  ArticleSummarizeOpts,
+  ArticleSummarizeResponse,
+  VideoSummarizeOpts,
+} from "./types/yandex";
 import type { NeuroClientOpts } from "./types/client";
 import { VideoSummarizeProtobuf } from "./protobuf";
 import config from "./data/config";
-import type {
-  GetSharingUrlOpts,
-  GetSharingUrlResponse,
-  GetSharingUrlSuccess,
-} from "./types/thapi";
+import type { GetSharingUrlOpts, GetSharingUrlSuccess } from "./types/thapi";
+import { snakeToCamel } from "./utils/utils";
 
 export default class NeuroClient extends MinimalClient {
+  /**
+   * /api/neuro/generation - requires sec headers
+   * /api/generation - requires session cookie
+   * /api/sharing-url - requires API Token
+   */
   paths = {
     summarizeVideo: "/video-summary/generation",
+    summarizeWithCookie: "/api/generation",
+    summarizeWithSec: "/api/neuro/generation",
     sharingUrl: "/api/sharing-url",
   };
 
+  /**
+   * Optional field.
+   *
+   * Allow use official "API" (only allow get summarized link to 300.ya.ru)
+   */
   apiToken?: string;
+  /**
+   * Optional field.
+   * Allow use all summarizeXX methods except summarizeVideo with outdated YaHMAC key.
+   * To enable it login to any ya website and set your `Session_id` cookie value
+   *
+   * Lifetime: ~6 months
+   */
+  sessionIdCookie?: string;
   hostTH: string;
   schemaTH: string;
 
   constructor({
     apiToken,
+    sessionIdCookie,
     host = config.host,
     hostTH = config.hostTH,
     headers = {},
@@ -38,6 +60,7 @@ export default class NeuroClient extends MinimalClient {
     });
 
     this.apiToken = apiToken;
+    this.sessionIdCookie = sessionIdCookie;
     const schemaTH = this.hostSchemaRe.exec(hostTH)?.[1] as URLSchema | null;
     this.hostTH = schemaTH ? hostTH.replace(`${schemaTH}://`, "") : hostTH;
     this.schemaTH = schemaTH ?? "https";
@@ -52,6 +75,7 @@ export default class NeuroClient extends MinimalClient {
     headers: Record<string, string> = {},
   ): Promise<ClientResponse<T>> {
     const options = this.getOpts(JSON.stringify(body), {
+      Accept: "application/json",
       "Content-Type": "application/json",
       ...headers,
     });
@@ -115,7 +139,7 @@ export default class NeuroClient extends MinimalClient {
     }
 
     const path = this.paths.sharingUrl;
-    const res = await this.requestTH<GetSharingUrlResponse>(
+    const res = await this.requestTH(
       path,
       {
         article_url: url,
@@ -125,10 +149,76 @@ export default class NeuroClient extends MinimalClient {
       },
     );
 
-    if (!res.success) {
+    const result = snakeToCamel<ClientResponse<GetSharingUrlSuccess>>(res);
+    if (!result.success) {
       throw new VOTJSError("Failed to request get sharing url", res);
     }
 
-    return res.data as unknown as GetSharingUrlSuccess;
+    return result.data;
+  }
+
+  getTHSummarizeSec(): {
+    path: string;
+    headers: Record<string, string>;
+  } {
+    const origin = `${this.schemaTH}://${this.hostTH}`;
+    if (this.sessionIdCookie) {
+      return {
+        path: this.paths.summarizeWithCookie,
+        headers: {
+          Cookie: `Session_id=${this.sessionIdCookie}`,
+          Origin: origin,
+          Referer: `${origin}/summary`,
+        },
+      };
+    }
+
+    return {
+      path: this.paths.summarizeWithSec,
+      headers: {
+        "X-Yandex-Browser-Locale": "ru",
+        "X-Neuro-Page": "yes",
+        Origin: origin,
+        Referer: `${origin}/neuro`,
+      },
+    };
+  }
+
+  async summarizeArticle({
+    url,
+    extraOpts: { sessionId, bypassCache = false } = {},
+    headers = {},
+  }: ArticleSummarizeOpts): Promise<ArticleSummarizeResponse> {
+    const body = sessionId
+      ? { session_id: sessionId, type: "article" }
+      : {
+          article_url: url,
+          ignore_cache: bypassCache,
+          type: "article",
+        };
+
+    const { path, headers: secHeaders } = this.getTHSummarizeSec();
+    if (!this.sessionIdCookie) {
+      const session = await this.getSession("neuroapi");
+      const secYaHeaders = await getSecYaHeaders(
+        "Ya-Summary",
+        session,
+        undefined,
+        path,
+      );
+
+      Object.assign(secHeaders, secYaHeaders);
+    }
+
+    const res = await this.requestTH(path, body, {
+      ...secHeaders,
+      ...headers,
+    });
+    const result = snakeToCamel<ClientResponse<ArticleSummarizeResponse>>(res);
+    if (!result.success) {
+      throw new VOTJSError("Failed to request summarize articles", res);
+    }
+
+    return result.data;
   }
 }
