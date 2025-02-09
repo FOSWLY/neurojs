@@ -56,6 +56,14 @@ const result = await client.summarizeVideo({
   url: "...",
   language: "en",
 });
+
+const result2 = await client.summarizeText({
+  text: "Super long text (300+ symbols)...",
+});
+
+const result3 = await client.summarizeArticle({
+  url: "https://toil.cc",
+});
 ```
 
 <!--
