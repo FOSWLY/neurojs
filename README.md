@@ -23,7 +23,7 @@ Now library supports working with:
 Required functionality for 1.0.0:
 
 - [x] Summarize video from YouTube
-- [ ] Summarize articles and text
+- [x] Summarize articles and text
 - [ ] Create and add support neuro-worker (like [vot-worker](https://github.com/FOSWLY/vot-worker))
 
 ## Installation
