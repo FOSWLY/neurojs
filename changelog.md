@@ -1,4 +1,4 @@
-# 0.2.0 (?) (WIP)
+# 0.2.0
 
 - Added support to **summarize text** with YaHMAC (without any auth) or with Cookies
 - Added support to **summarize articles** with YaHMAC (without any auth) or with Cookies
