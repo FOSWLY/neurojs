@@ -18,7 +18,7 @@ export enum SummarizeStatus {
   FAILED,
 }
 
-export type SummarizeType = "article" | "text" | "video";
+export type SummarizeType = "article" | "text" | "file" | "video";
 export type MinimalSummarizeResponse<T extends SummarizeType> = {
   pollIntervalMs: number;
   sessionId: string;
