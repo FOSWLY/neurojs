@@ -1,10 +1,15 @@
 import { MinimalClient, VOTJSError } from "@vot.js/core/client";
 import type { ClientResponse, URLSchema } from "@vot.js/core/types/client";
+import type { RequestHeaders } from "@vot.js/shared/types/data";
 import { getSecYaHeaders } from "@vot.js/shared/secure";
 
 import type {
   ArticleSummarizeOpts,
   ArticleSummarizeResponse,
+  SummarizeResponse,
+  SummarizeType,
+  TextSummarizeOpts,
+  TextSummarizeResponse,
   VideoSummarizeOpts,
 } from "./types/yandex";
 import type { NeuroClientOpts } from "./types/client";
@@ -184,19 +189,13 @@ export default class NeuroClient extends MinimalClient {
     };
   }
 
-  async summarizeArticle({
-    url,
-    extraOpts: { sessionId, bypassCache = false } = {},
-    headers = {},
-  }: ArticleSummarizeOpts): Promise<ArticleSummarizeResponse> {
-    const body = sessionId
-      ? { session_id: sessionId, type: "article" }
-      : {
-          article_url: url,
-          ignore_cache: bypassCache,
-          type: "article",
-        };
-
+  protected async summarizeImpl<
+    T extends SummarizeResponse<Exclude<SummarizeType, "video">>,
+  >(
+    type: Exclude<SummarizeType, "video">,
+    body: Record<string, unknown>,
+    headers: RequestHeaders,
+  ) {
     const { path, headers: secHeaders } = this.getTHSummarizeSec();
     if (!this.sessionIdCookie) {
       const session = await this.getSession("neuroapi");
@@ -214,11 +213,43 @@ export default class NeuroClient extends MinimalClient {
       ...secHeaders,
       ...headers,
     });
-    const result = snakeToCamel<ClientResponse<ArticleSummarizeResponse>>(res);
+    const result = snakeToCamel<ClientResponse<T>>(res);
     if (!result.success) {
-      throw new VOTJSError("Failed to request summarize articles", res);
+      throw new VOTJSError(`Failed to request summarize ${type}`, res);
     }
 
     return result.data;
+  }
+
+  async summarizeArticle({
+    url,
+    extraOpts: { sessionId, bypassCache = false } = {},
+    headers = {},
+  }: ArticleSummarizeOpts): Promise<ArticleSummarizeResponse> {
+    const type = "article";
+    const body = sessionId
+      ? { session_id: sessionId, type }
+      : {
+          article_url: url,
+          ignore_cache: bypassCache,
+          type,
+        };
+    return this.summarizeImpl(type, body, headers);
+  }
+
+  async summarizeText({
+    text,
+    extraOpts: { sessionId, bypassCache = false } = {},
+    headers = {},
+  }: TextSummarizeOpts): Promise<TextSummarizeResponse> {
+    const type = "text";
+    const body = sessionId
+      ? { session_id: sessionId, type }
+      : {
+          text,
+          ignore_cache: bypassCache,
+          type,
+        };
+    return this.summarizeImpl(type, body, headers);
   }
 }
