@@ -15,6 +15,7 @@ An unofficial library for interaction with Yandex Neuro API, which supports work
 Now library supports working with:
 
 - summarize video from YouTube
+- summarize articles
 - get link to summarized articles ([of. api](https://300.ya.ru/), need API-key)
 
 <!-- The library supports working with [worker servers](https://github.com/FOSWLY/neuro-worker), to do this, you need to create a `NeuroWorkerClient` client and specify the domain of the worker server, for example `neuro-worker.toil.cc`. -->
