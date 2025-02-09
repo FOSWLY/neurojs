@@ -20,7 +20,7 @@ const res = await client.summarizeVideo(data);
 
 console.log(res);
 setTimeout(async () => {
-  data.extraOpts.summarizeId = res.summarizeId;
+  data.extraOpts.sessionId = res.sessionId;
   const finishRes = await client.summarizeVideo(data);
   console.log(finishRes);
-}, res.interval);
+}, res.pollIntervalMs);

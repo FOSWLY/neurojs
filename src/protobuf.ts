@@ -2,7 +2,11 @@ import {
   VideoSummarizeRequest,
   VideoSummarizeResponse,
 } from "./protos/video_summarize";
-import type { VideoSummarizeExtraOpts } from "./types/yandex";
+import {
+  type VideoSummarizeExtraOpts,
+  type VideoSummarizeResponse as YaVideoSummarizeResponse,
+  SummarizeStatus,
+} from "./types/yandex";
 
 export abstract class VideoSummarizeProtobuf {
   static encodeVideoSummarizeRequest(
@@ -11,12 +15,12 @@ export abstract class VideoSummarizeProtobuf {
     {
       videoTitle = "",
       bypassCache = false,
-      summarizeId = undefined,
+      sessionId = undefined,
     }: VideoSummarizeExtraOpts = {},
   ) {
     return VideoSummarizeRequest.encode({
       url,
-      summarizeId,
+      sessionId,
       bypassCache,
       videoTitle,
       language,
@@ -27,7 +31,28 @@ export abstract class VideoSummarizeProtobuf {
     }).finish();
   }
 
-  static decodeVideoSummarizeResponse(response: ArrayBuffer) {
-    return VideoSummarizeResponse.decode(new Uint8Array(response));
+  static protoStatusToReal(statusCode: number): SummarizeStatus {
+    switch (statusCode) {
+      case 0:
+        return SummarizeStatus.SUCCESS;
+      case 1:
+        return SummarizeStatus.GENERATING;
+      default:
+        return SummarizeStatus.UNKNOWN;
+    }
+  }
+
+  static decodeVideoSummarizeResponse(
+    response: ArrayBuffer,
+  ): YaVideoSummarizeResponse {
+    const { statusCode, title, ...data } = VideoSummarizeResponse.decode(
+      new Uint8Array(response),
+    );
+    return {
+      statusCode: VideoSummarizeProtobuf.protoStatusToReal(statusCode),
+      title: title ?? "",
+      type: "video",
+      ...data,
+    };
   }
 }

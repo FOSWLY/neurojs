@@ -12,7 +12,7 @@ export const protobufPackage = "";
 /** VIDEO SUMMARIZE */
 export interface VideoSummarizeRequest {
   url: string;
-  summarizeId?: string | undefined;
+  sessionId?: string | undefined;
   bypassCache: boolean;
   videoTitle: string;
   unknown1: number;
@@ -24,14 +24,14 @@ export interface VideoSummarizeRequest {
 }
 
 export interface SummarizeThesisObject {
-  thesisId: number;
+  id: number;
   content: string;
 }
 
 export interface SummarizeChapterObject {
-  chapterId: number;
+  id: number;
   /** chapter title */
-  title: string;
+  content: string;
   /** video offset */
   offset: number;
   theses: SummarizeThesisObject[];
@@ -43,18 +43,19 @@ export interface VideoSummarizeResponse {
    * 0 is FINISHED
    * 1 is GENERATING
    */
-  status: number;
-  summarizeId: string;
+  statusCode: number;
+  sessionId: string;
   /** time before new request in ms */
-  interval: number;
-  summarizeTitle?: string | undefined;
+  pollIntervalMs: number;
+  /** translated title */
+  title?: string | undefined;
   unknown0?: string | undefined;
 }
 
 function createBaseVideoSummarizeRequest(): VideoSummarizeRequest {
   return {
     url: "",
-    summarizeId: undefined,
+    sessionId: undefined,
     bypassCache: false,
     videoTitle: "",
     unknown1: 0,
@@ -70,8 +71,8 @@ export const VideoSummarizeRequest: MessageFns<VideoSummarizeRequest> = {
     if (message.url !== "") {
       writer.uint32(10).string(message.url);
     }
-    if (message.summarizeId !== undefined) {
-      writer.uint32(26).string(message.summarizeId);
+    if (message.sessionId !== undefined) {
+      writer.uint32(26).string(message.sessionId);
     }
     if (message.bypassCache !== false) {
       writer.uint32(32).bool(message.bypassCache);
@@ -117,7 +118,7 @@ export const VideoSummarizeRequest: MessageFns<VideoSummarizeRequest> = {
             break;
           }
 
-          message.summarizeId = reader.string();
+          message.sessionId = reader.string();
           continue;
         }
         case 4: {
@@ -188,7 +189,7 @@ export const VideoSummarizeRequest: MessageFns<VideoSummarizeRequest> = {
   fromJSON(object: any): VideoSummarizeRequest {
     return {
       url: isSet(object.url) ? globalThis.String(object.url) : "",
-      summarizeId: isSet(object.summarizeId) ? globalThis.String(object.summarizeId) : undefined,
+      sessionId: isSet(object.sessionId) ? globalThis.String(object.sessionId) : undefined,
       bypassCache: isSet(object.bypassCache) ? globalThis.Boolean(object.bypassCache) : false,
       videoTitle: isSet(object.videoTitle) ? globalThis.String(object.videoTitle) : "",
       unknown1: isSet(object.unknown1) ? globalThis.Number(object.unknown1) : 0,
@@ -204,8 +205,8 @@ export const VideoSummarizeRequest: MessageFns<VideoSummarizeRequest> = {
     if (message.url !== "") {
       obj.url = message.url;
     }
-    if (message.summarizeId !== undefined) {
-      obj.summarizeId = message.summarizeId;
+    if (message.sessionId !== undefined) {
+      obj.sessionId = message.sessionId;
     }
     if (message.bypassCache !== false) {
       obj.bypassCache = message.bypassCache;
@@ -237,7 +238,7 @@ export const VideoSummarizeRequest: MessageFns<VideoSummarizeRequest> = {
   fromPartial<I extends Exact<DeepPartial<VideoSummarizeRequest>, I>>(object: I): VideoSummarizeRequest {
     const message = createBaseVideoSummarizeRequest();
     message.url = object.url ?? "";
-    message.summarizeId = object.summarizeId ?? undefined;
+    message.sessionId = object.sessionId ?? undefined;
     message.bypassCache = object.bypassCache ?? false;
     message.videoTitle = object.videoTitle ?? "";
     message.unknown1 = object.unknown1 ?? 0;
@@ -250,13 +251,13 @@ export const VideoSummarizeRequest: MessageFns<VideoSummarizeRequest> = {
 };
 
 function createBaseSummarizeThesisObject(): SummarizeThesisObject {
-  return { thesisId: 0, content: "" };
+  return { id: 0, content: "" };
 }
 
 export const SummarizeThesisObject: MessageFns<SummarizeThesisObject> = {
   encode(message: SummarizeThesisObject, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.thesisId !== 0) {
-      writer.uint32(8).int32(message.thesisId);
+    if (message.id !== 0) {
+      writer.uint32(8).int32(message.id);
     }
     if (message.content !== "") {
       writer.uint32(18).string(message.content);
@@ -276,7 +277,7 @@ export const SummarizeThesisObject: MessageFns<SummarizeThesisObject> = {
             break;
           }
 
-          message.thesisId = reader.int32();
+          message.id = reader.int32();
           continue;
         }
         case 2: {
@@ -298,15 +299,15 @@ export const SummarizeThesisObject: MessageFns<SummarizeThesisObject> = {
 
   fromJSON(object: any): SummarizeThesisObject {
     return {
-      thesisId: isSet(object.thesisId) ? globalThis.Number(object.thesisId) : 0,
+      id: isSet(object.id) ? globalThis.Number(object.id) : 0,
       content: isSet(object.content) ? globalThis.String(object.content) : "",
     };
   },
 
   toJSON(message: SummarizeThesisObject): unknown {
     const obj: any = {};
-    if (message.thesisId !== 0) {
-      obj.thesisId = Math.round(message.thesisId);
+    if (message.id !== 0) {
+      obj.id = Math.round(message.id);
     }
     if (message.content !== "") {
       obj.content = message.content;
@@ -319,23 +320,23 @@ export const SummarizeThesisObject: MessageFns<SummarizeThesisObject> = {
   },
   fromPartial<I extends Exact<DeepPartial<SummarizeThesisObject>, I>>(object: I): SummarizeThesisObject {
     const message = createBaseSummarizeThesisObject();
-    message.thesisId = object.thesisId ?? 0;
+    message.id = object.id ?? 0;
     message.content = object.content ?? "";
     return message;
   },
 };
 
 function createBaseSummarizeChapterObject(): SummarizeChapterObject {
-  return { chapterId: 0, title: "", offset: 0, theses: [] };
+  return { id: 0, content: "", offset: 0, theses: [] };
 }
 
 export const SummarizeChapterObject: MessageFns<SummarizeChapterObject> = {
   encode(message: SummarizeChapterObject, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.chapterId !== 0) {
-      writer.uint32(8).int32(message.chapterId);
+    if (message.id !== 0) {
+      writer.uint32(8).int32(message.id);
     }
-    if (message.title !== "") {
-      writer.uint32(18).string(message.title);
+    if (message.content !== "") {
+      writer.uint32(18).string(message.content);
     }
     if (message.offset !== 0) {
       writer.uint32(25).double(message.offset);
@@ -358,7 +359,7 @@ export const SummarizeChapterObject: MessageFns<SummarizeChapterObject> = {
             break;
           }
 
-          message.chapterId = reader.int32();
+          message.id = reader.int32();
           continue;
         }
         case 2: {
@@ -366,7 +367,7 @@ export const SummarizeChapterObject: MessageFns<SummarizeChapterObject> = {
             break;
           }
 
-          message.title = reader.string();
+          message.content = reader.string();
           continue;
         }
         case 3: {
@@ -396,8 +397,8 @@ export const SummarizeChapterObject: MessageFns<SummarizeChapterObject> = {
 
   fromJSON(object: any): SummarizeChapterObject {
     return {
-      chapterId: isSet(object.chapterId) ? globalThis.Number(object.chapterId) : 0,
-      title: isSet(object.title) ? globalThis.String(object.title) : "",
+      id: isSet(object.id) ? globalThis.Number(object.id) : 0,
+      content: isSet(object.content) ? globalThis.String(object.content) : "",
       offset: isSet(object.offset) ? globalThis.Number(object.offset) : 0,
       theses: globalThis.Array.isArray(object?.theses)
         ? object.theses.map((e: any) => SummarizeThesisObject.fromJSON(e))
@@ -407,11 +408,11 @@ export const SummarizeChapterObject: MessageFns<SummarizeChapterObject> = {
 
   toJSON(message: SummarizeChapterObject): unknown {
     const obj: any = {};
-    if (message.chapterId !== 0) {
-      obj.chapterId = Math.round(message.chapterId);
+    if (message.id !== 0) {
+      obj.id = Math.round(message.id);
     }
-    if (message.title !== "") {
-      obj.title = message.title;
+    if (message.content !== "") {
+      obj.content = message.content;
     }
     if (message.offset !== 0) {
       obj.offset = message.offset;
@@ -427,8 +428,8 @@ export const SummarizeChapterObject: MessageFns<SummarizeChapterObject> = {
   },
   fromPartial<I extends Exact<DeepPartial<SummarizeChapterObject>, I>>(object: I): SummarizeChapterObject {
     const message = createBaseSummarizeChapterObject();
-    message.chapterId = object.chapterId ?? 0;
-    message.title = object.title ?? "";
+    message.id = object.id ?? 0;
+    message.content = object.content ?? "";
     message.offset = object.offset ?? 0;
     message.theses = object.theses?.map((e) => SummarizeThesisObject.fromPartial(e)) || [];
     return message;
@@ -436,7 +437,7 @@ export const SummarizeChapterObject: MessageFns<SummarizeChapterObject> = {
 };
 
 function createBaseVideoSummarizeResponse(): VideoSummarizeResponse {
-  return { chapters: [], status: 0, summarizeId: "", interval: 0, summarizeTitle: undefined, unknown0: undefined };
+  return { chapters: [], statusCode: 0, sessionId: "", pollIntervalMs: 0, title: undefined, unknown0: undefined };
 }
 
 export const VideoSummarizeResponse: MessageFns<VideoSummarizeResponse> = {
@@ -444,17 +445,17 @@ export const VideoSummarizeResponse: MessageFns<VideoSummarizeResponse> = {
     for (const v of message.chapters) {
       SummarizeChapterObject.encode(v!, writer.uint32(10).fork()).join();
     }
-    if (message.status !== 0) {
-      writer.uint32(16).int32(message.status);
+    if (message.statusCode !== 0) {
+      writer.uint32(16).int32(message.statusCode);
     }
-    if (message.summarizeId !== "") {
-      writer.uint32(34).string(message.summarizeId);
+    if (message.sessionId !== "") {
+      writer.uint32(34).string(message.sessionId);
     }
-    if (message.interval !== 0) {
-      writer.uint32(40).int32(message.interval);
+    if (message.pollIntervalMs !== 0) {
+      writer.uint32(40).int32(message.pollIntervalMs);
     }
-    if (message.summarizeTitle !== undefined) {
-      writer.uint32(66).string(message.summarizeTitle);
+    if (message.title !== undefined) {
+      writer.uint32(66).string(message.title);
     }
     if (message.unknown0 !== undefined) {
       writer.uint32(82).string(message.unknown0);
@@ -482,7 +483,7 @@ export const VideoSummarizeResponse: MessageFns<VideoSummarizeResponse> = {
             break;
           }
 
-          message.status = reader.int32();
+          message.statusCode = reader.int32();
           continue;
         }
         case 4: {
@@ -490,7 +491,7 @@ export const VideoSummarizeResponse: MessageFns<VideoSummarizeResponse> = {
             break;
           }
 
-          message.summarizeId = reader.string();
+          message.sessionId = reader.string();
           continue;
         }
         case 5: {
@@ -498,7 +499,7 @@ export const VideoSummarizeResponse: MessageFns<VideoSummarizeResponse> = {
             break;
           }
 
-          message.interval = reader.int32();
+          message.pollIntervalMs = reader.int32();
           continue;
         }
         case 8: {
@@ -506,7 +507,7 @@ export const VideoSummarizeResponse: MessageFns<VideoSummarizeResponse> = {
             break;
           }
 
-          message.summarizeTitle = reader.string();
+          message.title = reader.string();
           continue;
         }
         case 10: {
@@ -531,10 +532,10 @@ export const VideoSummarizeResponse: MessageFns<VideoSummarizeResponse> = {
       chapters: globalThis.Array.isArray(object?.chapters)
         ? object.chapters.map((e: any) => SummarizeChapterObject.fromJSON(e))
         : [],
-      status: isSet(object.status) ? globalThis.Number(object.status) : 0,
-      summarizeId: isSet(object.summarizeId) ? globalThis.String(object.summarizeId) : "",
-      interval: isSet(object.interval) ? globalThis.Number(object.interval) : 0,
-      summarizeTitle: isSet(object.summarizeTitle) ? globalThis.String(object.summarizeTitle) : undefined,
+      statusCode: isSet(object.statusCode) ? globalThis.Number(object.statusCode) : 0,
+      sessionId: isSet(object.sessionId) ? globalThis.String(object.sessionId) : "",
+      pollIntervalMs: isSet(object.pollIntervalMs) ? globalThis.Number(object.pollIntervalMs) : 0,
+      title: isSet(object.title) ? globalThis.String(object.title) : undefined,
       unknown0: isSet(object.unknown0) ? globalThis.String(object.unknown0) : undefined,
     };
   },
@@ -544,17 +545,17 @@ export const VideoSummarizeResponse: MessageFns<VideoSummarizeResponse> = {
     if (message.chapters?.length) {
       obj.chapters = message.chapters.map((e) => SummarizeChapterObject.toJSON(e));
     }
-    if (message.status !== 0) {
-      obj.status = Math.round(message.status);
+    if (message.statusCode !== 0) {
+      obj.statusCode = Math.round(message.statusCode);
     }
-    if (message.summarizeId !== "") {
-      obj.summarizeId = message.summarizeId;
+    if (message.sessionId !== "") {
+      obj.sessionId = message.sessionId;
     }
-    if (message.interval !== 0) {
-      obj.interval = Math.round(message.interval);
+    if (message.pollIntervalMs !== 0) {
+      obj.pollIntervalMs = Math.round(message.pollIntervalMs);
     }
-    if (message.summarizeTitle !== undefined) {
-      obj.summarizeTitle = message.summarizeTitle;
+    if (message.title !== undefined) {
+      obj.title = message.title;
     }
     if (message.unknown0 !== undefined) {
       obj.unknown0 = message.unknown0;
@@ -568,10 +569,10 @@ export const VideoSummarizeResponse: MessageFns<VideoSummarizeResponse> = {
   fromPartial<I extends Exact<DeepPartial<VideoSummarizeResponse>, I>>(object: I): VideoSummarizeResponse {
     const message = createBaseVideoSummarizeResponse();
     message.chapters = object.chapters?.map((e) => SummarizeChapterObject.fromPartial(e)) || [];
-    message.status = object.status ?? 0;
-    message.summarizeId = object.summarizeId ?? "";
-    message.interval = object.interval ?? 0;
-    message.summarizeTitle = object.summarizeTitle ?? undefined;
+    message.statusCode = object.statusCode ?? 0;
+    message.sessionId = object.sessionId ?? "";
+    message.pollIntervalMs = object.pollIntervalMs ?? 0;
+    message.title = object.title ?? undefined;
     message.unknown0 = object.unknown0 ?? undefined;
     return message;
   },

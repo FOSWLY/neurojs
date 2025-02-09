@@ -3,7 +3,7 @@ syntax = "proto3";
 // VIDEO SUMMARIZE
 message VideoSummarizeRequest {
   string url = 1;
-  optional string summarizeId = 3;
+  optional string sessionId = 3;
   bool bypassCache = 4;
   string videoTitle = 5;
   int32 unknown1 = 6;
@@ -15,14 +15,14 @@ message VideoSummarizeRequest {
 }
 
 message SummarizeThesisObject {
-  int32 thesisId = 1;
+  int32 id = 1;
   string content = 2;
 }
 
 message SummarizeChapterObject {
-  int32 chapterId = 1;
+  int32 id = 1;
   // chapter title
-  string title = 2;
+  string content = 2;
   // video offset
   double offset = 3;
   repeated SummarizeThesisObject theses = 4;
@@ -32,10 +32,11 @@ message VideoSummarizeResponse {
   repeated SummarizeChapterObject chapters = 1;
   // 0 is FINISHED
   // 1 is GENERATING
-  int32 status = 2;
-  string summarizeId = 4;
+  int32 statusCode = 2;
+  string sessionId = 4;
   // time before new request in ms
-  int32 interval = 5;
-  optional string summarizeTitle = 8;
+  int32 pollIntervalMs = 5;
+  // translated title
+  optional string title = 8;
   optional string unknown0 = 10;
 }

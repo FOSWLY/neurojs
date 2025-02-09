@@ -16,13 +16,13 @@ test("summarize video", async () => {
 
   const res = await client.summarizeVideo(data);
 
-  // console.log(res);
-  expect(res.status).toEqual(1);
+  console.log(Bun.inspect(res));
+  expect(res.statusCode).toEqual(1);
 
-  await Bun.sleep(res.interval);
+  await Bun.sleep(res.pollIntervalMs);
 
-  data.extraOpts!.summarizeId = res.summarizeId;
+  data.extraOpts!.sessionId = res.sessionId;
   const finishRes = await client.summarizeVideo(data);
-  // console.log(finishRes);
-  expect(finishRes.summarizeTitle).not.toBeUndefined();
+  console.log(Bun.inspect(finishRes));
+  expect(finishRes.title).not.toBeUndefined();
 });
