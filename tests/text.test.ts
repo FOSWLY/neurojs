@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { NeuroClient } from "../src";
+import { NeuroClient, NeuroWorkerClient } from "../src";
 import type { TextSummarizeOpts } from "../src/types/yandex";
 
 const SESSION_ID_COOKIE = Bun.env.SESSION_ID_COOKIE;
@@ -11,6 +11,28 @@ const shortText = `привет тестер!`;
 
 test("summarize text (with hmac)", async () => {
   const client = new NeuroClient();
+  const data: TextSummarizeOpts = {
+    text,
+    extraOpts: {
+      bypassCache: true,
+    },
+  };
+
+  const res = await client.summarizeText(data);
+
+  // console.log(res);
+  expect(res.statusCode).toEqual(1);
+
+  await Bun.sleep(res.pollIntervalMs);
+
+  data.extraOpts!.sessionId = res.sessionId;
+  const finishRes = await client.summarizeText(data);
+  // console.log(finishRes);
+  expect(finishRes.thesis.length).not.toBe(0);
+});
+
+test("summarize text (with hmac and neuroworker)", async () => {
+  const client = new NeuroWorkerClient();
   const data: TextSummarizeOpts = {
     text,
     extraOpts: {
