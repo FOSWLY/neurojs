@@ -12,25 +12,19 @@
 
 ## Функционал
 
-На данный момент, библиотека поддерживает работу с:
+На данный момент библиотека поддерживает работу с:
 
 - суммаризацией видео с YouTube
 - суммаризация статей
 - суммаризация текста
 - получением ссылок на суммаризацию статей ([оф. апи](https://300.ya.ru/), требует API-ключ)
 
-<!-- Библиотека поддерживает работу с [воркер-серверами](https://github.com/FOSWLY/neuro-worker), для этого необходимо создать клиент `NeuroWorkerClient` и указать домен воркер-сервера, например `neuro-worker.toil.cc`. -->
-
-Необходимый функционал для 1.0.0:
-
-- [x] Поддержка суммаризации видео с YouTube
-- [x] Поддержка суммаризации статей и текста
-- [ ] Создание и добавление поддержки neuro-worker (аналог [vot-worker](https://github.com/FOSWLY/vot-worker) для этого апи)
+Библиотека поддерживает работу с [воркер-серверами](https://github.com/FOSWLY/neuro-worker), для этого необходимо создать клиент `NeuroWorkerClient` и указать домен воркер-сервера, например `neuro-worker.toil.cc`.
 
 ## Установка
 
 > [!WARNING]
-> Чтобы библиотека работала с Node.js или с браузером вам нужно выполнить дополнительную настройку. Все примеры можно увидеть [здесь](https://github.com/FOSWLY/neurojs/tree/master/examples)
+> Чтобы библиотека работала с Node.js или с браузером вам нужно выполнить дополнительную настройку или использовать с [neuro-worker](https://github.com/FOSWLY/neuro-worker). Все примеры можно увидеть [здесь](https://github.com/FOSWLY/neurojs/tree/master/examples)
 
 Установка библиотеки с помощью Bun:
 
@@ -66,14 +60,14 @@ const result3 = await client.summarizeArticle({
 });
 ```
 
-<!--
-Проксирование через [vot-worker](https://github.com/FOSWLY/vot-worker):
+Проксирование через [neuro-worker](https://github.com/FOSWLY/neuro-worker):
 
 ```ts
-const client = new VOTWorkerClient({
-  host: "vot-worker.toil.cc",
+const client = new NeuroWorkerClient({
+  host: "neuro-worker.toil.cc/browser",
+  hostTH: "neuro-worker.toil.cc/th",
 });
-``` -->
+```
 
 Больше примеров кода вы можете увидеть [здесь](https://github.com/FOSWLY/neurojs/tree/master/examples)
 

@@ -19,18 +19,12 @@ Now library supports working with:
 - summarize text
 - get link to summarized articles ([of. api](https://300.ya.ru/), need API-key)
 
-<!-- The library supports working with [worker servers](https://github.com/FOSWLY/neuro-worker), to do this, you need to create a `NeuroWorkerClient` client and specify the domain of the worker server, for example `neuro-worker.toil.cc`. -->
-
-Required functionality for 1.0.0:
-
-- [x] Summarize video from YouTube
-- [x] Summarize articles and text
-- [ ] Create and add support neuro-worker (like [vot-worker](https://github.com/FOSWLY/vot-worker))
+The library supports working with [worker servers](https://github.com/FOSWLY/neuro-worker), to do this, you need to create a `NeuroWorkerClient` client and specify the domain of the worker server, for example `neuro-worker.toil.cc`.
 
 ## Installation
 
 > [!WARNING]
-> To work with Node.js or with Browser you need to perform additional configuration. All examples can be seen [here](https://github.com/FOSWLY/neurojs/tree/master/examples)
+> To work with Node.js or with Browser you need to perform additional configuration or use with [neuro-worker](https://github.com/FOSWLY/neuro-worker). All examples can be seen [here](https://github.com/FOSWLY/neurojs/tree/master/examples)
 
 Install via Bun:
 
@@ -66,14 +60,14 @@ const result3 = await client.summarizeArticle({
 });
 ```
 
-<!--
 Proxying via [neuro-worker](https://github.com/FOSWLY/neuro-worker):
 
 ```ts
 const client = new NeuroWorkerClient({
-  host: "neuro-worker.toil.cc",
+  host: "neuro-worker.toil.cc/browser",
+  hostTH: "neuro-worker.toil.cc/th",
 });
-``` -->
+```
 
 You can see more code examples [here](https://github.com/FOSWLY/neurojs/tree/master/examples)
 
