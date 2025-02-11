@@ -253,3 +253,89 @@ export default class NeuroClient extends MinimalClient {
     return this.summarizeImpl(type, body, headers);
   }
 }
+
+export class NeuroWorkerClient extends NeuroClient {
+  constructor(opts: NeuroClientOpts = {}) {
+    opts.host = opts.host ?? config.hostWorker;
+    opts.hostTH = opts.hostTH ?? config.hostTHWorker;
+    super(opts);
+  }
+
+  async request<T = ArrayBuffer>(
+    path: string,
+    body: Uint8Array,
+    headers: Record<string, string> = {},
+    method = "POST",
+  ): Promise<ClientResponse<T>> {
+    const options = this.getOpts(
+      JSON.stringify({
+        headers: {
+          ...this.headers,
+          ...headers,
+        },
+        body: Array.from(body),
+      }),
+      {
+        "Content-Type": "application/json",
+      },
+      method,
+    );
+
+    try {
+      const res = await this.fetch(
+        `${this.schema}://${this.host}${path}`,
+        options,
+      );
+      const data = (await res.arrayBuffer()) as T;
+      return {
+        success: res.status === 200,
+        data,
+      };
+    } catch (err) {
+      return {
+        success: false,
+        data: (err as Error)?.message,
+      };
+    }
+  }
+
+  async requestTH<T = unknown>(
+    path: string,
+    body: NonNullable<unknown>,
+    headers: Record<string, string> = {},
+  ): Promise<ClientResponse<T>> {
+    const options = this.getOpts(
+      JSON.stringify({
+        headers: {
+          ...this.headers,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          ...headers,
+        },
+        body,
+      }),
+      {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      "POST",
+    );
+
+    try {
+      const res = await this.fetch(
+        `${this.schemaTH}://${this.hostTH}${path}`,
+        options,
+      );
+      const data = (await res.json()) as T;
+      return {
+        success: res.status === 200,
+        data,
+      };
+    } catch (err) {
+      return {
+        success: false,
+        data: (err as Error)?.message,
+      };
+    }
+  }
+}
