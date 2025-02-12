@@ -3,14 +3,18 @@ import type { ClientResponse, URLSchema } from "@vot.js/core/types/client";
 import type { RequestHeaders } from "@vot.js/shared/types/data";
 import { getSecYaHeaders } from "@vot.js/shared/secure";
 
-import type {
-  ArticleSummarizeOpts,
-  ArticleSummarizeResponse,
-  SummarizeResponse,
-  SummarizeType,
-  TextSummarizeOpts,
-  TextSummarizeResponse,
-  VideoSummarizeOpts,
+import {
+  SummarizeStatus,
+  type ArticleSummarizeOpts,
+  type ArticleSummarizeResponse,
+  type MinimalSummarizeResponse,
+  type SharingVideoSummarizeResponse,
+  type SummarizeResponse,
+  type SummarizeType,
+  type TextSummarizeOpts,
+  type TextSummarizeResponse,
+  type VideoSummarizeOpts,
+  type GetSharingContentOpts,
 } from "./types/yandex";
 import type { NeuroClientOpts } from "./types/client";
 import { VideoSummarizeProtobuf } from "./protobuf";
@@ -29,6 +33,7 @@ export default class NeuroClient extends MinimalClient {
     summarizeWithCookie: "/api/generation",
     summarizeWithSec: "/api/neuro/generation",
     sharingUrl: "/api/sharing-url",
+    sharing: "/api/sharing",
   };
 
   /**
@@ -157,6 +162,50 @@ export default class NeuroClient extends MinimalClient {
     const result = snakeToCamel<ClientResponse<GetSharingUrlSuccess>>(res);
     if (!result.success) {
       throw new VOTJSError("Failed to request get sharing url", res);
+    }
+
+    return result.data;
+  }
+
+  async getSharingContent<
+    T extends MinimalSummarizeResponse<any> =
+      | ArticleSummarizeResponse
+      | SharingVideoSummarizeResponse
+      | TextSummarizeResponse,
+  >({ token, headers = {} }: GetSharingContentOpts): Promise<T> {
+    const { headers: secHeaders } = this.getTHSummarizeSec();
+    const path = this.paths.sharing;
+    if (!this.sessionIdCookie) {
+      const session = await this.getSession("neuroapi");
+      const secYaHeaders = await getSecYaHeaders(
+        "Ya-Summary",
+        session,
+        undefined,
+        path,
+      );
+
+      Object.assign(secHeaders, secYaHeaders);
+    }
+
+    const body = {
+      token,
+    };
+
+    const res = await this.requestTH(path, body, {
+      ...secHeaders,
+      ...headers,
+    });
+    const result = snakeToCamel<ClientResponse<T>>(res);
+    if (!result.success) {
+      throw new VOTJSError(`Failed to get sharing content for ${token}`, res);
+    }
+
+    const data = result.data;
+    if (data.statusCode === SummarizeStatus.NOT_FOUND_IN_CACHE) {
+      throw new VOTJSError(
+        "Failed to get sharing content, because can't find data for this token",
+        res,
+      );
     }
 
     return result.data;

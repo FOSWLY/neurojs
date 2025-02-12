@@ -16,6 +16,7 @@ export enum SummarizeStatus {
   GENERATING,
   SUCCESS,
   FAILED,
+  NOT_FOUND_IN_CACHE,
 }
 
 export type SummarizeType = "article" | "text" | "file" | "video";
@@ -55,7 +56,7 @@ export type SummarizeChapter<
 };
 
 export type VideoSummarizeChapter = SummarizeChapter<SummarizeThesis> & {
-  offset: number;
+  startTime: number;
 };
 
 export type VideoSummarizeExtraOpts = SharedSummarizeExtraOpts & {
@@ -84,3 +85,16 @@ export type TextSummarizeOpts =
     text: string;
   };
 export type TextSummarizeResponse = SummarizeResponse<"text">;
+
+export type GetSharingContentOpts = {
+  token: string;
+  headers?: RequestHeaders;
+};
+export type SharingVideoSummarizeResponse =
+  MinimalSummarizeResponse<"video"> & {
+    contentId: string; // videoId
+    keypoints: VideoSummarizeChapter[];
+    normalizedUrl: string;
+    sharingUrl: string; // link to 300.ya.ru
+    summaryAgeSeconds: number;
+  };
