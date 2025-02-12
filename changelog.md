@@ -1,3 +1,8 @@
+# 1.1.0
+
+- Added support get data by sharing token (`https://300.ya.ru/TOKEN`)
+- Renamed summarizeVideo response `chapters[n].offset` -> `chapters[n].startTime`
+
 # 1.0.0
 
 - Added support to work with [neuro-worker](https://github.com/FOSWLY/neuro-worker)
