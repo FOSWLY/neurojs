@@ -18,6 +18,7 @@
 - суммаризация статей
 - суммаризация текста
 - получением ссылок на суммаризацию статей ([оф. апи](https://300.ya.ru/), требует API-ключ)
+- получение существующей суммаризации по токену (`https://300.ya.ru/TOKEN`)
 
 Библиотека поддерживает работу с [воркер-серверами](https://github.com/FOSWLY/neuro-worker), для этого необходимо создать клиент `NeuroWorkerClient` и указать домен воркер-сервера, например `neuro-worker.toil.cc`.
 
@@ -57,6 +58,10 @@ const result2 = await client.summarizeText({
 
 const result3 = await client.summarizeArticle({
   url: "https://toil.cc",
+});
+
+const result4 = await client.getSharingContent({
+  token: "hoOAM7gs",
 });
 ```
 

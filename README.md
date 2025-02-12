@@ -18,6 +18,7 @@ Now library supports working with:
 - summarize articles
 - summarize text
 - get link to summarized articles ([of. api](https://300.ya.ru/), need API-key)
+- get exists summarized data by token (`https://300.ya.ru/TOKEN`)
 
 The library supports working with [worker servers](https://github.com/FOSWLY/neuro-worker), to do this, you need to create a `NeuroWorkerClient` client and specify the domain of the worker server, for example `neuro-worker.toil.cc`.
 
@@ -57,6 +58,10 @@ const result2 = await client.summarizeText({
 
 const result3 = await client.summarizeArticle({
   url: "https://toil.cc",
+});
+
+const result4 = await client.getSharingContent({
+  token: "hoOAM7gs",
 });
 ```
 

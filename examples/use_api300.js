@@ -19,3 +19,10 @@ const res = await client.getSharingUrl({
 // return { status: 'success', sharingUrl: 'https://300.ya.ru/...' }
 // or throw
 console.log(res);
+
+// works without API_TOKEN
+const resContent = await client.getSharingContent({
+  token: "hoOAM7gs",
+});
+
+console.log(resContent);
