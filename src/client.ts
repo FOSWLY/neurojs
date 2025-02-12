@@ -187,14 +187,16 @@ export default class NeuroClient extends MinimalClient {
       Object.assign(secHeaders, secYaHeaders);
     }
 
-    const body = {
-      token,
-    };
-
-    const res = await this.requestTH(path, body, {
-      ...secHeaders,
-      ...headers,
-    });
+    const res = await this.requestTH(
+      path,
+      {
+        token,
+      },
+      {
+        ...secHeaders,
+        ...headers,
+      },
+    );
     const result = snakeToCamel<ClientResponse<T>>(res);
     if (!result.success) {
       throw new VOTJSError(`Failed to get sharing content for ${token}`, res);
