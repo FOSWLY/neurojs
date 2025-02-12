@@ -32,8 +32,7 @@ export interface SummarizeChapterObject {
   id: number;
   /** chapter title */
   content: string;
-  /** video offset */
-  offset: number;
+  startTime: number;
   theses: SummarizeThesisObject[];
 }
 
@@ -327,7 +326,7 @@ export const SummarizeThesisObject: MessageFns<SummarizeThesisObject> = {
 };
 
 function createBaseSummarizeChapterObject(): SummarizeChapterObject {
-  return { id: 0, content: "", offset: 0, theses: [] };
+  return { id: 0, content: "", startTime: 0, theses: [] };
 }
 
 export const SummarizeChapterObject: MessageFns<SummarizeChapterObject> = {
@@ -338,8 +337,8 @@ export const SummarizeChapterObject: MessageFns<SummarizeChapterObject> = {
     if (message.content !== "") {
       writer.uint32(18).string(message.content);
     }
-    if (message.offset !== 0) {
-      writer.uint32(25).double(message.offset);
+    if (message.startTime !== 0) {
+      writer.uint32(25).double(message.startTime);
     }
     for (const v of message.theses) {
       SummarizeThesisObject.encode(v!, writer.uint32(34).fork()).join();
@@ -375,7 +374,7 @@ export const SummarizeChapterObject: MessageFns<SummarizeChapterObject> = {
             break;
           }
 
-          message.offset = reader.double();
+          message.startTime = reader.double();
           continue;
         }
         case 4: {
@@ -399,7 +398,7 @@ export const SummarizeChapterObject: MessageFns<SummarizeChapterObject> = {
     return {
       id: isSet(object.id) ? globalThis.Number(object.id) : 0,
       content: isSet(object.content) ? globalThis.String(object.content) : "",
-      offset: isSet(object.offset) ? globalThis.Number(object.offset) : 0,
+      startTime: isSet(object.startTime) ? globalThis.Number(object.startTime) : 0,
       theses: globalThis.Array.isArray(object?.theses)
         ? object.theses.map((e: any) => SummarizeThesisObject.fromJSON(e))
         : [],
@@ -414,8 +413,8 @@ export const SummarizeChapterObject: MessageFns<SummarizeChapterObject> = {
     if (message.content !== "") {
       obj.content = message.content;
     }
-    if (message.offset !== 0) {
-      obj.offset = message.offset;
+    if (message.startTime !== 0) {
+      obj.startTime = message.startTime;
     }
     if (message.theses?.length) {
       obj.theses = message.theses.map((e) => SummarizeThesisObject.toJSON(e));
@@ -430,7 +429,7 @@ export const SummarizeChapterObject: MessageFns<SummarizeChapterObject> = {
     const message = createBaseSummarizeChapterObject();
     message.id = object.id ?? 0;
     message.content = object.content ?? "";
-    message.offset = object.offset ?? 0;
+    message.startTime = object.startTime ?? 0;
     message.theses = object.theses?.map((e) => SummarizeThesisObject.fromPartial(e)) || [];
     return message;
   },

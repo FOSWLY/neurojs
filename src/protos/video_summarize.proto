@@ -23,8 +23,7 @@ message SummarizeChapterObject {
   int32 id = 1;
   // chapter title
   string content = 2;
-  // video offset
-  double offset = 3;
+  double startTime = 3;
   repeated SummarizeThesisObject theses = 4;
 }
 
