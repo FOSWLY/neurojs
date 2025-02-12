@@ -1,7 +1,7 @@
 {
   "name": "@toil/neurojs",
   "description": "Unoffical library for a short retelling of YouTube videos, articles and texts with Yandex API",
-  "version": "0.2.0",
+  "version": "1.1.0",
   "license": "MIT",
   "author": "Toil",
   "repository": {
@@ -42,10 +42,10 @@
       "import": "./dist/types/*.js",
       "types": "./dist/types/*.d.ts"
     },
-    "./protos": {
-      "require": "./dist/protos/video_summarize.js",
-      "import": "./dist/protos/video_summarize.js",
-      "types": "./dist/protos/video_summarize.d.ts"
+    "./protos/*": {
+      "require": "./dist/protos/*.js",
+      "import": "./dist/protos/*.js",
+      "types": "./dist/protos/*.d.ts"
     },
     "./protobuf": {
       "require": "./dist/protobuf.js",
