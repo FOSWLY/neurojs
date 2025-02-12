@@ -15,3 +15,12 @@ test.if(!!API_TOKEN)("sharing url", async () => {
   // console.log(res);
   expect(res.sharingUrl).toEqual("https://300.ya.ru/3fOcYRBL");
 });
+
+test("get sharing content", async () => {
+  const res = await client.getSharingContent({
+    token: "hoOAM7gs",
+  });
+
+  // console.log(res);
+  expect(res.sharingUrl).toEqual("https://300.ya.ru/hoOAM7gs");
+});
