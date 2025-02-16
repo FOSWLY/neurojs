@@ -30,7 +30,7 @@ export type MinimalSummarizeResponse<T extends SummarizeType> = {
 
 export type SummarizeResponse<T extends SummarizeType> =
   MinimalSummarizeResponse<T> & {
-    chapters: SummarizeChapter[];
+    chapters: SummarizeChapter<SummarizeThesisWithLink>[];
     haveChapters: boolean;
     normalizedUrl: string;
     sharingUrl: string; // link to 300.ya.ru
