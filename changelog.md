@@ -1,3 +1,8 @@
+# 1.1.1
+
+- Updated generated typebox
+- Rewritted typebox generation logic with `@toil/typebox-genx`
+
 # 1.1.0
 
 - Added support get data by sharing token (`https://300.ya.ru/TOKEN`)
