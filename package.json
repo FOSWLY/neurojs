@@ -1,7 +1,7 @@
 {
   "name": "@toil/neurojs",
   "description": "Unoffical library for a short retelling of YouTube videos, articles and texts with Yandex API",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "license": "MIT",
   "author": "Toil",
   "repository": {
@@ -96,8 +96,8 @@
   },
   "dependencies": {
     "@bufbuild/protobuf": "^2.2.3",
-    "@vot.js/core": "^2.2.5",
-    "@vot.js/shared": "^2.2.5"
+    "@vot.js/core": "^2.2.6",
+    "@vot.js/shared": "^2.2.6"
   },
   "scripts": {
     "build:bun": "bun run ./scripts/build.ts",
