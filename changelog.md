@@ -1,3 +1,9 @@
+# 1.1.2
+
+- Added custom field `haveChapters: true` for VideoSummarizeResponse
+- Added custom field `thesis` for VideoSummarizeResponse (converted from chapters)
+- Bump `@vot.js` depends
+
 # 1.1.1
 
 - Updated generated typebox
