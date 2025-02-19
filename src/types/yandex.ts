@@ -47,6 +47,13 @@ export type SummarizeThesisWithLink = SummarizeThesis & {
   link: string;
 };
 
+/**
+ * custom type
+ */
+export type SummarizeThesisWithTime = SummarizeThesis & {
+  startTime: number;
+};
+
 export type SummarizeChapter<
   T extends SummarizeThesis = SummarizeThesisWithLink,
 > = {
@@ -55,6 +62,7 @@ export type SummarizeChapter<
   theses: T[];
 };
 
+// all rights, SummarizeThesis, not SummarizeThesisWithTime
 export type VideoSummarizeChapter = SummarizeChapter<SummarizeThesis> & {
   startTime: number;
 };
@@ -70,6 +78,14 @@ export type VideoSummarizeOpts =
 export type VideoSummarizeResponse = MinimalSummarizeResponse<"video"> & {
   chapters: VideoSummarizeChapter[];
   unknown0?: string;
+  /**
+   * custom field
+   */
+  haveChapters: true;
+  /**
+   * custom field
+   */
+  thesis: SummarizeThesisWithTime[];
 };
 
 export type ArticleSummarizeExtraOpts = SharedSummarizeExtraOpts;

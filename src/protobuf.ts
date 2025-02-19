@@ -3,6 +3,7 @@ import {
   VideoSummarizeResponse,
 } from "./protos/video_summarize";
 import {
+  type SummarizeThesisWithTime,
   type VideoSummarizeExtraOpts,
   type VideoSummarizeResponse as YaVideoSummarizeResponse,
   SummarizeStatus,
@@ -45,13 +46,22 @@ export abstract class VideoSummarizeProtobuf {
   static decodeVideoSummarizeResponse(
     response: ArrayBuffer,
   ): YaVideoSummarizeResponse {
-    const { statusCode, title, ...data } = VideoSummarizeResponse.decode(
-      new Uint8Array(response),
-    );
+    const { statusCode, title, chapters, ...data } =
+      VideoSummarizeResponse.decode(new Uint8Array(response));
     return {
       statusCode: VideoSummarizeProtobuf.protoStatusToReal(statusCode),
       title: title ?? "",
       type: "video",
+      haveChapters: true,
+      thesis: chapters.map<SummarizeThesisWithTime>((chapter) => {
+        const { startTime, content, id } = chapter;
+        return {
+          id,
+          content,
+          startTime,
+        };
+      }),
+      chapters,
       ...data,
     };
   }
