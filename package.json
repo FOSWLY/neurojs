@@ -61,7 +61,7 @@
     "@types/bun": "latest",
     "@types/eslint__js": "^8.42.3",
     "eslint": "^9.20.1",
-    "eslint-plugin-oxlint": "^0.15.11",
+    "eslint-plugin-oxlint": "^0.16.2",
     "husky": "^9.1.7",
     "oxlint": "^0.15.11",
     "prettier": "^3.5.1",
