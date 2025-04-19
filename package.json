@@ -57,20 +57,20 @@
     }
   },
   "devDependencies": {
+    "@eslint/js": "^9.25.0",
     "@toil/typebox-genx": "^0.1.0",
     "@types/bun": "latest",
-    "@types/eslint__js": "^8.42.3",
-    "eslint": "^9.20.1",
-    "eslint-plugin-oxlint": "^0.16.5",
+    "eslint": "^9.25.0",
+    "eslint-plugin-oxlint": "^0.16.6",
     "husky": "^9.1.7",
-    "oxlint": "^0.16.5",
-    "prettier": "^3.5.1",
-    "ts-proto": "^2.6.1",
+    "oxlint": "^0.16.6",
+    "prettier": "^3.5.3",
+    "ts-proto": "^2.7.0",
     "tsc-esm-fix": "^3.1.2",
-    "typedoc": "^0.27.7",
-    "typedoc-plugin-missing-exports": "^3.1.0",
-    "typedoc-plugin-rename-defaults": "^0.7.2",
-    "typescript-eslint": "^8.24.0"
+    "typedoc": "^0.28.2",
+    "typedoc-plugin-missing-exports": "^4.0.0",
+    "typedoc-plugin-rename-defaults": "^0.7.3",
+    "typescript-eslint": "^8.30.1"
   },
   "publishConfig": {
     "access": "public"
@@ -92,12 +92,12 @@
     "neuro"
   ],
   "peerDependencies": {
-    "typescript": "^5.7.3"
+    "typescript": "^5.8.3"
   },
   "dependencies": {
-    "@bufbuild/protobuf": "^2.2.3",
-    "@vot.js/core": "^2.2.6",
-    "@vot.js/shared": "^2.2.6"
+    "@bufbuild/protobuf": "^2.2.5",
+    "@vot.js/core": "^2.4.0",
+    "@vot.js/shared": "^2.4.0"
   },
   "scripts": {
     "build:bun": "bun run ./scripts/build.ts",

@@ -1,3 +1,7 @@
+# 1.1.3 (WIP)
+
+- Bump depends
+
 # 1.1.2
 
 - Added custom field `haveChapters: true` for VideoSummarizeResponse
